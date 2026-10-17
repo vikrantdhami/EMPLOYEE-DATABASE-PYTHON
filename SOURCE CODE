@@ -1,0 +1,261 @@
+# ======================================================
+
+# EMPLOYEE DATABASE MANAGEMENT SYSTEM
+
+# With Exception Handling and Error Handling
+
+# ======================================================
+
+# Employee class represents one employee.
+
+class Employee:
+    def __init__(self, id, name, age, dept, gender):
+        self.id = id
+        self.name = name
+        self.age = age
+        self.dept = dept
+        self.gender = gender
+
+
+# Stores all employee records.
+employees = []
+
+# ======================================================
+
+# INPUT VALIDATION FUNCTIONS
+
+# ======================================================
+
+def get_integer(message):
+    try:
+        return int(input(message))
+    except ValueError:
+        print("Error: Please enter a valid integer.")
+        return None
+
+
+def get_text(message):
+    value = input(message).strip()
+
+    if not value:
+        raise ValueError("This field cannot be empty.")
+
+    return value
+
+
+def find_employee(search_id):
+    for employee in employees:
+        if employee.id == search_id:
+            return employee
+
+    return None
+
+
+# ======================================================
+
+# ADD EMPLOYEE
+
+# ======================================================
+
+def add_employee():
+    try:
+        emp_id = get_integer("Enter Employee ID: ")
+
+        if emp_id is None:
+            return
+
+        if emp_id <= 0:
+            raise ValueError("Employee ID must be positive.")
+
+        if find_employee(emp_id):
+            raise ValueError("Employee ID already exists.")
+
+        name = get_text("Enter Employee Name: ")
+
+        age = get_integer("Enter Employee Age: ")
+
+        if age is None:
+            return
+
+        if age <= 0:
+            raise ValueError("Age must be greater than zero.")
+
+        dept = get_text("Enter Department: ")
+        gender = get_text("Enter Gender: ")
+
+        employee = Employee(emp_id, name, age, dept, gender)
+        employees.append(employee)
+
+        print("Employee added successfully!")
+
+    except ValueError as error:
+        print("Error:", error)
+
+
+# ======================================================
+
+# DISPLAY EMPLOYEES
+
+# ======================================================
+
+def display_employees():
+    if not employees:
+        print("Error: No employee records available.")
+        return
+
+    print("\n========== EMPLOYEE RECORDS ==========")
+
+    for employee in employees:
+        print("--------------------------------------")
+        print("ID:", employee.id)
+        print("Name:", employee.name)
+        print("Age:", employee.age)
+        print("Department:", employee.dept)
+        print("Gender:", employee.gender)
+
+    print("--------------------------------------")
+
+
+# ======================================================
+
+# SEARCH EMPLOYEE
+
+# ======================================================
+
+def search_employee():
+    emp_id = get_integer("Enter Employee ID to search: ")
+
+    if emp_id is None:
+        return
+
+    employee = find_employee(emp_id)
+
+    if employee:
+        print("\nEmployee Found!")
+        print("ID:", employee.id)
+        print("Name:", employee.name)
+        print("Age:", employee.age)
+        print("Department:", employee.dept)
+        print("Gender:", employee.gender)
+    else:
+        print("Error: Employee not found.")
+
+
+# ======================================================
+
+# UPDATE EMPLOYEE
+
+# ======================================================
+
+def update_employee():
+    emp_id = get_integer("Enter Employee ID to update: ")
+
+    if emp_id is None:
+        return
+
+    employee = find_employee(emp_id)
+
+    if employee is None:
+        print("Error: Employee not found.")
+        return
+
+    try:
+        print("Enter the new employee details.")
+
+        name = get_text("Enter New Name: ")
+
+        age = get_integer("Enter New Age: ")
+
+        if age is None:
+            return
+
+        if age <= 0:
+            raise ValueError("Age must be greater than zero.")
+
+        dept = get_text("Enter New Department: ")
+        gender = get_text("Enter New Gender: ")
+
+        employee.name = name
+        employee.age = age
+        employee.dept = dept
+        employee.gender = gender
+
+        print("Employee updated successfully!")
+
+    except ValueError as error:
+        print("Error:", error)
+
+
+# ======================================================
+
+# DELETE EMPLOYEE
+
+# ======================================================
+
+def delete_employee():
+    emp_id = get_integer("Enter Employee ID to delete: ")
+
+    if emp_id is None:
+        return
+
+    employee = find_employee(emp_id)
+
+    if employee is None:
+        print("Error: Employee not found.")
+        return
+
+    employees.remove(employee)
+    print("Employee deleted successfully!")
+
+
+# ======================================================
+
+# MAIN MENU
+
+# ======================================================
+
+def main():
+    while True:
+        print("\n======================================")
+        print("EMPLOYEE DATABASE MANAGEMENT SYSTEM")
+        print("======================================")
+        print("1. Add Employee")
+        print("2. Display Employees")
+        print("3. Search Employee")
+        print("4. Update Employee")
+        print("5. Delete Employee")
+        print("6. Exit")
+
+        choice = get_integer("Enter your choice: ")
+
+        if choice is None:
+            continue
+
+        try:
+            if choice == 1:
+                add_employee()
+            elif choice == 2:
+                display_employees()
+            elif choice == 3:
+                search_employee()
+            elif choice == 4:
+                update_employee()
+            elif choice == 5:
+                delete_employee()
+            elif choice == 6:
+                print("Exiting Employee Database System.")
+                break
+            else:
+                raise ValueError("Invalid menu choice. Enter a number from 1 to 6.")
+        except Exception as error:
+            print("An unexpected error occurred:", error)
+
+
+# ======================================================
+
+# PROGRAM EXECUTION
+
+# ======================================================
+
+if __name__ == "__main__":
+    main()
